@@ -32,16 +32,17 @@ trait PostRepository {
 
 @Singleton
 class PostRepositoryImpl @Inject()()(implicit ec: ExecutionContext) extends PostRepository {
-  private val postList = List(
+  private var postList = List(
     PostData(PostId("1"), "title1", "blog post 1"),
-    PostData(PostId("2"), "title1", "blog post 2"),
-    PostData(PostId("3"), "title1", "blog post 3"),
-    PostData(PostId("4"), "title1", "blog post 4"),
-    PostData(PostId("5"), "title1", "blog post 5"),
+    PostData(PostId("2"), "title2", "blog post 2"),
+    PostData(PostId("3"), "title3", "blog post 3"),
+    PostData(PostId("4"), "title4", "blog post 4"),
+    PostData(PostId("5"), "title5", "blog post 5"),
   )
 
   override def create(data: PostData)(implicit mc: MarkerContext): Future[PostId] = {
     Future {
+      postList = postList :+ data
       data.id
     }
   }

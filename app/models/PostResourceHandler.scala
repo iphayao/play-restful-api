@@ -31,7 +31,7 @@ class PostResourceHandler @Inject()(routesProvider: Provider[PostRouter],
 
   def create(postInput: PostFormInput)(implicit mc: MarkerContext): Future[PostResource] = {
     val data = PostData(PostId("9999"), postInput.title, postInput.body)
-    postRepository.create(data).map {id =>
+    postRepository.create(data).map { _ =>
       createPostResource(data)
     }
   }
