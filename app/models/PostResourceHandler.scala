@@ -37,8 +37,7 @@ class PostResourceHandler @Inject()(routesProvider: Provider[PostRouter],
   }
 
   def lookup(id: String)(implicit mc: MarkerContext): Future[Option[PostResource]] = {
-    val postFuture = postRepository.get(PostId(id))
-    postFuture.map { posts =>
+    postRepository.get(PostId(id)).map { posts =>
       posts.map { postData => createPostResource(postData)}
     }
   }
@@ -46,6 +45,19 @@ class PostResourceHandler @Inject()(routesProvider: Provider[PostRouter],
   def find(implicit mc: MarkerContext): Future[Iterable[PostResource]] = {
     postRepository.list().map { postDataList =>
       postDataList.map(postData => createPostResource(postData))
+    }
+  }
+
+  def update(id: String)(postInput: PostFormInput)(implicit mc: MarkerContext): Future[Option[PostResource]] = {
+    val data = PostData(PostId(id), postInput.title, postInput.body)
+    postRepository.update(PostId(id), data).map { posts =>
+      posts.map { postData => createPostResource(postData) }
+    }
+  }
+
+  def remove(id: String)(implicit mc: MarkerContext): Future[Option[PostResource]] = {
+    postRepository.delete(PostId(id)).map { posts =>
+      posts.map { postData => createPostResource(postData)}
     }
   }
 

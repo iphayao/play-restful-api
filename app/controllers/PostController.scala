@@ -47,14 +47,19 @@ class PostController @Inject()(pcc: PostControllerComponent)(implicit ec: Execut
     }
   }
 
-  // PATCH -> /:id
-  def update(id: Long): Action[AnyContent] = Action { implicit request =>
-    Ok(s"Updated $id")
+  def update(id: Long): Action[AnyContent] = Action.async { implicit request =>
+    logger.trace("update: ")
+    val post = form.bindFromRequest.get
+    postResourceHandler.update(id.toString)(post).map { post =>
+      Ok(Json.toJson(post))
+    }
   }
 
-  // DELETE -> /:id
-  def delete(id: Long): Action[AnyContent] = Action { implicit request =>
-    Ok(s"Deleted $id")
+  def delete(id: Long): Action[AnyContent] = Action.async { implicit request =>
+    logger.trace("delete: ")
+    postResourceHandler.remove(id.toString).map { post =>
+      Ok(Json.toJson(post))
+    }
   }
 
 }

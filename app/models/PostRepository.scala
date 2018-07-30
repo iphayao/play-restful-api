@@ -26,8 +26,8 @@ trait PostRepository {
   def create(data: PostData)(implicit mc: MarkerContext): Future[PostId]
   def list()(implicit mc: MarkerContext): Future[Iterable[PostData]]
   def get(id: PostId)(implicit mc: MarkerContext): Future[Option[PostData]]
-//  def update(id: PostId, value: PostData)(implicit mc: MarkerContext): Future[Option[PostData]]
-//  def delete(id: PostId)(implicit mc: MarkerContext): Future[PostId]
+  def update(id: PostId, value: PostData)(implicit mc: MarkerContext): Future[Option[PostData]]
+  def delete(id: PostId)(implicit mc: MarkerContext): Future[Option[PostData]]
 }
 
 @Singleton
@@ -55,23 +55,24 @@ class PostRepositoryImpl @Inject()()(implicit ec: ExecutionContext) extends Post
 
   override def get(id: PostId)(implicit mc: MarkerContext): Future[Option[PostData]] = {
     Future {
-      postList.find(post => post.id == id)
+      postList.find(p => p.id == id)
     }
   }
 
-//  override def update(id: PostId, postData: PostData)(implicit mc: MarkerContext): Future[Option[PostData]] = {
-//    Future {
-//      var p = postList.find(post => post.id == id)
-//      //postLis t diff List(p)
-//      p
-//    }
-//  }
-//
-//  override def delete(id: PostId)(implicit mc: MarkerContext): Future[PostId] = {
-//    Future {
-//      val p = postList.find(post => post.id == id)
-//      //postList diff List(p)
-//      p.id
-//    }
-//  }
+  override def update(id: PostId, data: PostData)(implicit mc: MarkerContext): Future[Option[PostData]] = {
+    Future {
+      var i = postList.indexWhere(p => p.id == id)
+      postList = postList.patch(i, Seq(data), 1)
+      postList.find(p => p.id == id)
+    }
+  }
+
+  override def delete(id: PostId)(implicit mc: MarkerContext): Future[Option[PostData]] = {
+    Future {
+      val p = postList.find(post => post.id == id)
+      var i = postList.indexWhere(p => p.id == id)
+      postList = postList.patch(i, Nil, 1)
+      p
+    }
+  }
 }

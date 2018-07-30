@@ -26,10 +26,10 @@ class PostRouter @Inject()(controller: PostController) extends SimpleRouter {
     case POST(p"/") =>
       controller.create()
 
-//    case PATCH(p"/${long(id)}") =>
-//      controller.update(id)
-//
-//    case DELETE(p"/${long(id)}") =>
-//      controller.delete(id)
+    case PATCH(p"/${long(id)}") =>
+      controller.update(id)
+
+    case DELETE(p"/${long(id)}") =>
+      controller.delete(id)
   }
 }
