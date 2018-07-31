@@ -1,2 +1,2 @@
-# play-scala-rest-api
+# Play Scala RESTful API
 RESTful API with Play (Scala) Framwork
